@@ -20,7 +20,7 @@
             android:background="@drawable/round_back_light_10"
             android:paddingStart="12dp"
             android:paddingEnd="2dp"
-            android:src="@drawable/back_btn" />
+            android:src="@drawable/backbtn" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profilePic"
@@ -82,7 +82,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="10dp"
 
-            android:src="@drawable/sendBtnPic" />
+            android:src="@drawable/sendbtnpic" />
 
     </RelativeLayout>
 </RelativeLayout>
