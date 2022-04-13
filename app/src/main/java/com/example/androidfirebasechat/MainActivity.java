@@ -30,7 +30,12 @@ public class MainActivity extends AppCompatActivity {
     private String mobile;
     private String email;
     private String name;
+    private String chatKey = "";
+    private int unseenMessages = 0;
+    private String lastMessage = "";
     private RecyclerView messagesRecyclerView;
+    private MessagesAdapter messagesAdapter;
+    private boolean dataSet = false;
     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://androidfirebasechat-6ee81-default-rtdb.firebaseio.com/");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
         messagesRecyclerView.setHasFixedSize(true);
         messagesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        //set adapter to recycleview
+        messagesAdapter = new MessagesAdapter(messagesLists, MainActivity.this);
+        messagesRecyclerView.setAdapter(messagesAdapter);
         //show progress dialog for user to wait
         ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
@@ -73,17 +81,68 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 messagesLists.clear();
+                unseenMessages = 0;
+                lastMessage = "";
+                chatKey = "";
                 for(DataSnapshot dataSnapshot: snapshot.child("users").getChildren()){
+
                     final String getMobile = dataSnapshot.getKey();
+
+                    dataSet = false;
                     if(!getMobile.equals(mobile)){
                         final String getName = dataSnapshot.child("name").getValue(String.class);
                         final String getProfilePic = dataSnapshot.child("profile_pic").getValue(String.class);
 
-                        MessagesList messageList = new MessagesList(getName, getMobile, "",getProfilePic,0);
-                        messagesLists.add(messageList);
+
+                        databaseReference.child("chat").addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                int getChatCounts = (int)snapshot.getChildrenCount();
+                                if(getChatCounts>0){
+                                    for(DataSnapshot dataSnapshot1 : snapshot.getChildren()){
+                                        final String getKey = dataSnapshot1.getKey();
+                                        chatKey = getKey;
+
+                                        if(dataSnapshot1.hasChild("user_1") && dataSnapshot1.hasChild("user_2")
+                                        && dataSnapshot1.hasChild("messages")){
+                                            final String getUserOne = dataSnapshot1.child("user_1").getValue(String.class);
+                                            final String getUserTwo = dataSnapshot1.child("user_2").getValue(String.class);
+
+                                            if((getUserOne.equals(getMobile)&&getUserTwo.equals(mobile))||
+                                                    (getUserOne.equals(mobile)||getUserTwo.equals(getMobile))){
+                                                for(DataSnapshot chatDataSnapshot : dataSnapshot1.child("messages").getChildren()){
+                                                    final long getMessageKey = Long.parseLong(chatDataSnapshot.getKey());
+                                                    final long getLastSeenMessage = Long.parseLong(MemoryData.getLastMsgTS(MainActivity.this, getKey));
+
+                                                    lastMessage = chatDataSnapshot.child("msg").getValue(String.class);
+                                                    if(getMessageKey>getLastSeenMessage){
+                                                        unseenMessages++;
+                                                    }
+
+                                                }
+                                            }
+                                        }
+
+                                    }
+                                }
+                                if(dataSet){
+                                    dataSet = true;
+                                    MessagesList messageList = new MessagesList(getName, getMobile, lastMessage,getProfilePic,unseenMessages, chatKey);
+                                    messagesLists.add(messageList);
+                                    messagesAdapter.updateData(messagesLists);
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
                     }
                 }
-                messagesRecyclerView.setAdapter(new MessagesAdapter(messagesLists, MainActivity.this));
+
             }
 
             @Override
