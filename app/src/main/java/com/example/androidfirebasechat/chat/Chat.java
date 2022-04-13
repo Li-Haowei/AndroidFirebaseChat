@@ -3,7 +3,9 @@ package com.example.androidfirebasechat.chat;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -37,7 +39,7 @@ public class Chat extends AppCompatActivity {
         name = findViewById(R.id.name);
         messageET = findViewById(R.id.messageET);
         sendBtn = findViewById(R.id.sendBtn);
-        profilePic = findViewById(R.id.userProfilePic);
+        profilePic = findViewById(R.id.profilePic);
 
         //get data from messages adapter class
         final String getname = getIntent().getStringExtra("name");
@@ -47,13 +49,13 @@ public class Chat extends AppCompatActivity {
         //get user mobile from memory
         getUserMobile = MemoryData.getData(Chat.this);
         name.setText(getname);
-        try {
-            if (!getProfile.isEmpty()) {
-                Picasso.get().load(getProfile).into(profilePic);
-            }
-        }catch (Exception e){
+        if(getProfile.length()!=0){
+            Picasso.get().load(getProfile).into(profilePic);
+        }
+        else{
             profilePic.setImageResource(R.drawable.user_icon);
         }
+
         try {
             if (chatKey.isEmpty()) {
                 databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -85,11 +87,13 @@ public class Chat extends AppCompatActivity {
             final String currentTimestamp = String.valueOf(System.currentTimeMillis()).substring(0,10);
 
             MemoryData.saveLastMsgTS(currentTimestamp, chatKey, Chat.this);
+
             databaseReference.child("chat").child(chatKey).child("user_1").setValue(getUserMobile);
             databaseReference.child("chat").child(chatKey).child("user_2").setValue(getMobile);
             databaseReference.child("chat").child(chatKey).child("messages").child(currentTimestamp).child("msg").setValue(getTextMessage);
             databaseReference.child("chat").child(chatKey).child("messages").child(currentTimestamp).child("mobile").setValue(getUserMobile);
-
+            //clear text after send
+            messageET.setText("");
         });
     }
 }

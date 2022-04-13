@@ -51,6 +51,7 @@ public class Register extends AppCompatActivity {
             finish();
         }
 
+
         btnRegister.setOnClickListener(view -> {
             progressDialog.show();
             name = etName.getText().toString();

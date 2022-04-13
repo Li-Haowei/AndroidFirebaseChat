@@ -7,6 +7,7 @@
     tools:context=".chat.Chat">
 
     <RelativeLayout
+        android:id="@+id/topBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -26,9 +27,7 @@
             android:id="@+id/profilePic"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_centerVertical="true"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="40dp"
             android:layout_toEndOf="@id/backBtn"
             android:src="@drawable/user_icon" />
         <LinearLayout
@@ -57,7 +56,14 @@
         </LinearLayout>
     </RelativeLayout>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chattingRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/chatBar"
+        android:layout_below="@+id/topBar" />
     <RelativeLayout
+        android:id="@+id/chatBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

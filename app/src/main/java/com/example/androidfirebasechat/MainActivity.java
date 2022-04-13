@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
 
                                     }
                                 }
-                                if(dataSet){
+                                if(!dataSet){
                                     dataSet = true;
                                     MessagesList messageList = new MessagesList(getName, getMobile, lastMessage,getProfilePic,unseenMessages, chatKey);
                                     messagesLists.add(messageList);
