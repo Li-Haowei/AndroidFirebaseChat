@@ -29,14 +29,16 @@
         android:textSize="18sp"
         android:layout_centerInParent="true"
         />
-    <ImageView
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/userProfilePic"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="40dp"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/user_icon"/>
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/user_icon" />
 </RelativeLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"

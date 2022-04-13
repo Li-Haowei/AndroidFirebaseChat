@@ -3,6 +3,7 @@ package com.example.androidfirebasechat;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
@@ -23,23 +24,41 @@ public class Register extends AppCompatActivity {
     private String name;
     private String email;
     private String number;
-    private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://console.firebase.google.com/project/androidfirebasechat-6ee81/database/androidfirebasechat-6ee81-default-rtdb/data/~2F");
+    private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://androidfirebasechat-6ee81-default-rtdb.firebaseio.com/");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        //show progress dialog for user to wait
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Loading");
 
         btnRegister = findViewById(R.id.btnRegister);
         etEmail = findViewById(R.id.etEmail);
         etName = findViewById(R.id.etName);
         etNumber = findViewById(R.id.etNumber);
 
+        //check if user already locked in
+
+        if(!MemoryData.getData(this).isEmpty()){
+            Intent intent = new Intent(Register.this, MainActivity.class);
+            intent.putExtra("mobile", MemoryData.getData(this));
+            intent.putExtra("email", MemoryData.getName(this));
+            intent.putExtra("name", "");
+            startActivity(intent);
+            finish();
+        }
+
         btnRegister.setOnClickListener(view -> {
+            progressDialog.show();
             name = etName.getText().toString();
             email = etEmail.getText().toString();
             number = etNumber.getText().toString();
             if(name.length()==0||email.length()==0||number.length()==0){
                 Toast.makeText(this,"All fields required",Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
             }else{
                 databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -49,7 +68,12 @@ public class Register extends AppCompatActivity {
                         }else {
                             databaseReference.child("users").child(number).child("email").setValue(email);
                             databaseReference.child("users").child(number).child("name").setValue(name);
-
+                            databaseReference.child("users").child(number).child("profile_pic").setValue("");
+                            //save mobile number into local memory
+                            MemoryData.saveData(number, Register.this);
+                            //save name into local memory
+                            MemoryData.saveName(name, Register.this);
+                            //
                             Toast.makeText(Register.this,"Success",Toast.LENGTH_SHORT).show();
 
                             Intent intent = new Intent(Register.this, MainActivity.class);
@@ -59,10 +83,12 @@ public class Register extends AppCompatActivity {
                             startActivity(intent);
                             finish();
                         }
+                        progressDialog.dismiss();
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
+                        progressDialog.dismiss();
 
                     }
                 });

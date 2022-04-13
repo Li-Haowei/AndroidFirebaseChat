@@ -16,6 +16,8 @@ import org.w3c.dom.Text;
 
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MyViewHolder> {
 
     private final List<MessagesList> messagesLists;
@@ -43,7 +45,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MyView
     }
     static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView profilePic;
+        private CircleImageView profilePic;
         private TextView name;
         private TextView lastMessage;
         private TextView unseenMessages;

@@ -12,7 +12,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profilePic"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
@@ -20,33 +20,36 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="40dp"
                 android:src="@drawable/user_icon" />
+
             <LinearLayout
-                android:layout_toStartOf="@+id/unseenMessages"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:layout_marginEnd="10dp"
-                android:layout_marginStart="20dp"
                 android:layout_centerVertical="true"
-                android:layout_toEndOf="@id/ProfilePic">
-            <TextView
-                android:id="@+id/name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:textSize="18dp"
-                android:text="Fullname"
-                android:textStyle="bold"/>
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="10dp"
+                android:layout_toStartOf="@+id/unseenMessages"
+                android:layout_toEndOf="@id/profilePic"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="Fullname"
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
+
                 <TextView
                     android:id="@+id/lastMessage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:maxLines="1"
-                    android:textSize="14dp"
                     android:layout_marginTop="5dp"
+                    android:maxLines="1"
+                    android:text="This is last message"
                     android:textColor="@color/theme_color_80"
-                    android:text="This is last message"/>
+                    android:textSize="14dp" />
 
             </LinearLayout>
 
