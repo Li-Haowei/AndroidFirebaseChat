@@ -16,6 +16,7 @@ import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
+import java.io.IOException;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -39,8 +40,12 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MyView
     @Override
     public void onBindViewHolder(@NonNull MessagesAdapter.MyViewHolder holder, int position) {
         MessagesList list2 = messagesLists.get(position);
-        if(list2!=null){
-           Picasso.get().load(list2.getProfilePic()).into(holder.profilePic);
+        try {
+            if (!list2.getProfilePic().isEmpty()) {
+                Picasso.get().load(list2.getProfilePic()).into(holder.profilePic);
+            }
+        }catch (Exception e){
+            holder.profilePic.setImageResource(R.drawable.user_icon);
         }
         holder.name.setText(list2.getName());
         holder.lastMessage.setText(list2.getLastMessage());
