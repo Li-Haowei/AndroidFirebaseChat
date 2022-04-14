@@ -2,14 +2,21 @@ package com.example.androidfirebasechat.chat;
 
 public class ChatList {
 
-    private String mobile, name, message, date, time;
+    private String mobile, name, message, time;
 
-    public ChatList(String mobile, String name, String message, String date, String time) {
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public ChatList(String mobile, String name, String message, String timestamp) {
         this.mobile = mobile;
         this.name = name;
         this.message = message;
-        this.date = date;
-        this.time = time;
+        this.time = timestamp;
     }
 
     public String getMobile() {
@@ -36,19 +43,4 @@ public class ChatList {
         this.message = message;
     }
 
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
 }

@@ -93,16 +93,20 @@ public class Chat extends AppCompatActivity {
                                 chatLists.clear();
                                 for (DataSnapshot messageSnapshot : snapshot.child("chat").child(chatKey).child("messages").getChildren()){
                                     if (messageSnapshot.hasChild("msg")&& messageSnapshot.hasChild("mobile")){
-                                        final String msgTimestamp = messageSnapshot.getKey();
+                                        final String getTime;
+                                        if (messageSnapshot.hasChild("time")){
+                                            getTime = messageSnapshot.child("time").getValue(String.class);
+                                        }
+                                        else{
+                                            getTime = "no time";
+                                        }
+
                                         final String getMobile = messageSnapshot.child("mobile").getValue(String.class);
                                         final String getMsg = messageSnapshot.child("msg").getValue(String.class);
-                                        Timestamp timestamp = new Timestamp(Long.parseLong(msgTimestamp));
-                                        Date date = new Date(timestamp.getTime());
-                                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-                                        SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("hh:mm aa", Locale.getDefault());
 
+                                        final String msgTimestamp = messageSnapshot.getKey();
 
-                                        ChatList chatList = new ChatList(getMobile, getName, getMsg, simpleDateFormat.format(date),simpleTimeFormat.format(date));
+                                        ChatList chatList = new ChatList(getMobile, getName, getMsg, getTime);
 
                                         chatLists.add(chatList);
                                         if(LoadingFirstTime || Long.parseLong(msgTimestamp) > Long.parseLong(MemoryData.getLastMsgTS(Chat.this, chatKey))){
@@ -137,11 +141,13 @@ public class Chat extends AppCompatActivity {
             final String currentTimestamp = String.valueOf(System.currentTimeMillis()).substring(0,10);
 
             MemoryData.saveLastMsgTS(currentTimestamp, chatKey, Chat.this);
+            String timeStamp = new SimpleDateFormat("yyyy/MM/dd HH:mm").format(new Date());
 
             databaseReference.child("chat").child(chatKey).child("user_1").setValue(getUserMobile);
             databaseReference.child("chat").child(chatKey).child("user_2").setValue(getMobile);
             databaseReference.child("chat").child(chatKey).child("messages").child(currentTimestamp).child("msg").setValue(getTextMessage);
             databaseReference.child("chat").child(chatKey).child("messages").child(currentTimestamp).child("mobile").setValue(getUserMobile);
+            databaseReference.child("chat").child(chatKey).child("messages").child(currentTimestamp).child("time").setValue(timeStamp);
             //clear text after send
             messageET.setText("");
         });

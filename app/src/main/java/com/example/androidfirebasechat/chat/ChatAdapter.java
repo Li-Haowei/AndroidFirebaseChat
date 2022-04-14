@@ -45,13 +45,13 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> 
             holder.oppoLayout.setVisibility(View.GONE);
 
             holder.myMsg.setText(list2.getMessage());
-            holder.myTime.setText(list2.getDate()+ " " + list2.getTime());
+            holder.myTime.setText(list2.getTime());
         }else {
             holder.myLayout.setVisibility(View.GONE);
             holder.oppoLayout.setVisibility(View.VISIBLE);
 
             holder.oppoMsg.setText(list2.getMessage());
-            holder.oppoTime.setText(list2.getDate()+ " " + list2.getTime());
+            holder.oppoTime.setText(list2.getTime());
         }
     }
 
